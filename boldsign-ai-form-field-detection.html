@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Form Field Detection for eSignatures | BoldSign</title>
+  <meta name="description" content="Automatically detect signatures, dates, and form fields with BoldSign's AI. Skip manual setup, build templates faster, and migrate from DocuSign in minutes." />
+  <link rel="canonical" href="https://boldsign.com/esignature-ai-form-field-detection/" />
+
+  <!-- ============================ -->
+  <!-- SCHEMA: FAQPage               -->
+  <!-- ============================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {"@type":"Question","name":"How accurate is BoldSign's AI form field detection?","acceptedAnswer":{"@type":"Answer","text":"BoldSign's AI correctly identifies and places signature, date, and text fields on standard contracts in most cases. You can review and adjust any field before sending."}},
+      {"@type":"Question","name":"Which document types are supported?","acceptedAnswer":{"@type":"Answer","text":"BoldSign supports PDF and Microsoft Word documents for AI field detection."}},
+      {"@type":"Question","name":"Which field types can the AI detect?","acceptedAnswer":{"@type":"Answer","text":"Signature, initial, date, text, checkbox, dropdown, and attachment fields."}},
+      {"@type":"Question","name":"Can I edit AI-placed fields before sending?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every detected field can be moved, resized, reassigned to a different signer, or deleted before the document is sent."}},
+      {"@type":"Question","name":"Is AI form field detection included in all plans?","acceptedAnswer":{"@type":"Answer","text":"Yes, AI form field detection is available on all BoldSign plans, including the 30-day free trial."}},
+      {"@type":"Question","name":"How does it differ from DocuSign smart fields?","acceptedAnswer":{"@type":"Answer","text":"BoldSign's AI field detection is included on every paid plan, supports both PDF and Word, and pairs with reusable templates so migrating from DocuSign takes minutes, not weeks."}},
+      {"@type":"Question","name":"Is signer data secure during AI processing?","acceptedAnswer":{"@type":"Answer","text":"Documents are processed inside BoldSign's SOC 2-, HIPAA-, GDPR-, and eIDAS-compliant infrastructure, with end-to-end encryption and a tamper-proof audit trail."}}
+    ]
+  }
+  </script>
+
+  <!-- ============================ -->
+  <!-- SCHEMA: HowTo                 -->
+  <!-- ============================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": "How to use AI form field detection in BoldSign",
+    "step": [
+      {"@type":"HowToStep","position":1,"name":"Upload","text":"Drop in a PDF or Word document."},
+      {"@type":"HowToStep","position":2,"name":"Scan","text":"BoldSign's AI reads the document layout, locating signature lines, date placeholders, and form labels."},
+      {"@type":"HowToStep","position":3,"name":"Auto-place","text":"Signature, initial, date, text, checkbox, and dropdown fields are positioned automatically and assigned to signers."},
+      {"@type":"HowToStep","position":4,"name":"Review and send","text":"Adjust any field if needed, then send for signature in one click."}
+    ]
+  }
+  </script>
+
+  <!-- ============================ -->
+  <!-- SCHEMA: SoftwareApplication   -->
+  <!-- ============================ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BoldSign",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "url": "https://boldsign.com/",
+    "featureList": "AI form field detection, eSignature templates, signer authentication, audit trail, REST API, HIPAA + SOC 2 + GDPR + eIDAS compliance",
+    "offers": {"@type":"Offer","price":"0","priceCurrency":"USD","description":"30-day free trial, no credit card required"},
+    "aggregateRating": {"@type":"AggregateRating","ratingValue":"4.7","reviewCount":"700"}
+  }
+  </script>
+
+  <style>
+    :root {
+      --bs-blue: #2962FF;
+      --bs-blue-dark: #0D47A1;
+      --bs-navy: #0A1F44;
+      --bs-text: #1A2238;
+      --bs-muted: #5A6885;
+      --bs-bg: #FFFFFF;
+      --bs-bg-soft: #F4F7FB;
+      --bs-bg-accent: #EAF1FE;
+      --bs-border: #E3E8F0;
+      --bs-success: #00B894;
+      --bs-shadow: 0 4px 24px rgba(10, 31, 68, 0.06);
+      --bs-radius: 12px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--bs-text);
+      background: var(--bs-bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+    /* Top notice bar */
+    .notice-bar {
+      background: var(--bs-navy);
+      color: #fff;
+      text-align: center;
+      padding: 10px 16px;
+      font-size: 14px;
+    }
+    .notice-bar a { color: #FFD54F; text-decoration: none; font-weight: 600; }
+
+    /* Header / nav */
+    header.site {
+      border-bottom: 1px solid var(--bs-border);
+      background: #fff;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 0;
+    }
+    .logo {
+      font-size: 22px; font-weight: 800; color: var(--bs-navy);
+      letter-spacing: -0.5px; text-decoration: none;
+    }
+    .logo span { color: var(--bs-blue); }
+    .nav ul { display: flex; gap: 28px; list-style: none; padding: 0; margin: 0; }
+    .nav ul a { color: var(--bs-text); text-decoration: none; font-weight: 500; font-size: 15px; }
+    .nav ul a:hover { color: var(--bs-blue); }
+    .nav-cta { display: flex; gap: 10px; }
+
+    /* Buttons */
+    .btn {
+      display: inline-block; padding: 12px 22px;
+      border-radius: 8px; text-decoration: none;
+      font-weight: 600; font-size: 15px;
+      transition: transform .15s ease, box-shadow .15s ease;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+    }
+    .btn-primary { background: var(--bs-blue); color: #fff; }
+    .btn-primary:hover { background: var(--bs-blue-dark); transform: translateY(-1px); box-shadow: var(--bs-shadow); }
+    .btn-secondary { background: #fff; color: var(--bs-blue); border-color: var(--bs-blue); }
+    .btn-secondary:hover { background: var(--bs-bg-accent); }
+
+    /* Hero */
+    .hero {
+      padding: 64px 0 48px;
+      background: linear-gradient(180deg, var(--bs-bg-accent) 0%, #fff 100%);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 48px;
+      align-items: center;
+    }
+    .hero h1 {
+      font-size: 44px; line-height: 1.15;
+      color: var(--bs-navy);
+      margin: 0 0 20px;
+      letter-spacing: -1px;
+    }
+    .answer-first {
+      background: #fff;
+      border-left: 4px solid var(--bs-blue);
+      padding: 18px 22px;
+      border-radius: 8px;
+      box-shadow: var(--bs-shadow);
+      font-size: 17px;
+      color: var(--bs-text);
+      margin: 0 0 22px;
+    }
+    .answer-first strong { font-weight: 600; }
+    .subhead {
+      font-size: 17px;
+      color: var(--bs-muted);
+      margin: 0 0 28px;
+    }
+    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+    .trust-line {
+      font-size: 13px; color: var(--bs-muted);
+      width: 100%; margin-top: 10px;
+    }
+    .trust-line::before { content: "✓ "; color: var(--bs-success); font-weight: 700; }
+
+    .hero-figure {
+      background: #fff;
+      border-radius: var(--bs-radius);
+      box-shadow: var(--bs-shadow);
+      overflow: hidden;
+      border: 1px solid var(--bs-border);
+    }
+    .hero-figure .placeholder {
+      aspect-ratio: 16/10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, #F4F7FB 0%, #EAF1FE 100%);
+      color: var(--bs-blue-dark);
+      padding: 24px;
+      text-align: center;
+    }
+    .hero-figure .placeholder .badge {
+      background: var(--bs-blue); color: #fff;
+      padding: 6px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 700;
+      letter-spacing: .5px; margin-bottom: 12px;
+    }
+    .hero-figure .placeholder .icon { font-size: 48px; margin-bottom: 8px; }
+    .hero-figure figcaption {
+      font-size: 13px; color: var(--bs-muted);
+      padding: 12px 16px; border-top: 1px solid var(--bs-border);
+      background: #fff;
+    }
+
+    /* Logo strip */
+    .logo-strip {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--bs-border);
+      text-align: center;
+    }
+    .logo-strip p {
+      color: var(--bs-muted); font-size: 13px; letter-spacing: 1px;
+      text-transform: uppercase; margin: 0 0 16px;
+    }
+    .logo-strip .logos {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 36px;
+      opacity: .65;
+    }
+    .logo-strip .logos span { font-weight: 700; color: var(--bs-muted); font-size: 16px; }
+
+    /* Sections */
+    section.block { padding: 64px 0; }
+    section.block.alt { background: var(--bs-bg-soft); }
+    section.block h2 {
+      font-size: 30px; color: var(--bs-navy);
+      margin: 0 0 12px; letter-spacing: -.5px;
+    }
+    section.block .lede {
+      color: var(--bs-muted); font-size: 17px; margin: 0 0 32px;
+      max-width: 760px;
+    }
+
+    /* Takeaways */
+    .takeaways ul { padding: 0; margin: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+    .takeaways li {
+      background: #fff; border: 1px solid var(--bs-border);
+      padding: 16px 18px; border-radius: 8px;
+      position: relative; padding-left: 44px;
+      font-size: 15px;
+    }
+    .takeaways li::before {
+      content: "✓"; position: absolute; left: 14px; top: 14px;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--bs-success); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px;
+    }
+
+    /* How it works */
+    .how-it-works ol {
+      list-style: none; padding: 0; margin: 0;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px;
+      counter-reset: step;
+    }
+    .how-it-works ol li {
+      background: #fff; border: 1px solid var(--bs-border);
+      padding: 24px; border-radius: var(--bs-radius);
+      position: relative; counter-increment: step;
+    }
+    .how-it-works ol li::before {
+      content: counter(step);
+      position: absolute; top: -16px; left: 24px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--bs-blue); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 14px;
+    }
+    .how-it-works ol li strong { display: block; font-size: 17px; color: var(--bs-navy); margin-bottom: 6px; }
+    .how-it-works ol li p { margin: 0; color: var(--bs-muted); font-size: 14px; }
+
+    /* Field types grid */
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: #fff; border: 1px solid var(--bs-border);
+      padding: 22px; border-radius: var(--bs-radius);
+      transition: border-color .15s, transform .15s;
+    }
+    .feature-card:hover { border-color: var(--bs-blue); transform: translateY(-2px); }
+    .feature-card h3 { margin: 0 0 6px; font-size: 17px; color: var(--bs-navy); }
+    .feature-card p { margin: 0; color: var(--bs-muted); font-size: 14px; }
+    .feature-card .ico {
+      display: inline-flex; width: 36px; height: 36px;
+      align-items: center; justify-content: center;
+      background: var(--bs-bg-accent); color: var(--bs-blue);
+      border-radius: 8px; font-weight: 700; margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    /* Stat row */
+    .stat-row {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px; margin-top: 28px;
+    }
+    .stat-row > div {
+      background: #fff; border: 1px solid var(--bs-border);
+      padding: 24px; border-radius: var(--bs-radius);
+      text-align: center;
+    }
+    .stat-row .stat {
+      display: block; font-size: 36px; font-weight: 800;
+      color: var(--bs-blue); margin-bottom: 6px; letter-spacing: -1px;
+    }
+    .stat-row > div span:last-child { color: var(--bs-muted); font-size: 14px; }
+    .accuracy p { font-size: 16px; color: var(--bs-text); max-width: 760px; }
+    .placeholder-note {
+      font-size: 12px; color: var(--bs-muted); font-style: italic;
+      margin-top: 16px;
+    }
+
+    /* Comparison table */
+    .comparison-wrap { overflow-x: auto; }
+    table.comparison {
+      width: 100%; border-collapse: collapse;
+      background: #fff; border-radius: var(--bs-radius); overflow: hidden;
+      box-shadow: var(--bs-shadow);
+    }
+    table.comparison th, table.comparison td {
+      padding: 14px 18px; text-align: left;
+      border-bottom: 1px solid var(--bs-border); font-size: 14px;
+    }
+    table.comparison th {
+      background: var(--bs-navy); color: #fff; font-weight: 600;
+    }
+    table.comparison th:first-child { width: 32%; }
+    table.comparison tbody tr:nth-child(odd) { background: var(--bs-bg-soft); }
+    table.comparison tbody tr:hover { background: var(--bs-bg-accent); }
+    .yes { color: var(--bs-success); font-weight: 700; }
+    .no { color: #C62828; font-weight: 700; }
+    .partial { color: #FB8C00; font-weight: 600; }
+
+    /* Migration */
+    .migration ul { padding-left: 22px; color: var(--bs-text); }
+    .migration ul li { margin-bottom: 8px; }
+
+    /* Proof / quote */
+    blockquote.proof {
+      background: var(--bs-navy); color: #fff;
+      padding: 36px 40px; border-radius: var(--bs-radius);
+      font-size: 19px; line-height: 1.5;
+      margin: 0; position: relative;
+      max-width: 860px;
+    }
+    blockquote.proof::before {
+      content: "\201C"; font-size: 80px; color: var(--bs-blue);
+      position: absolute; top: -10px; left: 16px; line-height: 1;
+    }
+    blockquote.proof cite {
+      display: block; font-size: 14px; font-style: normal;
+      color: #B0BEC5; margin-top: 16px;
+    }
+
+    /* FAQ */
+    .faq-item {
+      background: #fff; border: 1px solid var(--bs-border);
+      border-radius: 8px; margin-bottom: 12px; overflow: hidden;
+    }
+    .faq-item summary {
+      padding: 18px 22px; font-weight: 600; color: var(--bs-navy);
+      cursor: pointer; list-style: none; font-size: 16px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after {
+      content: "+"; font-size: 22px; color: var(--bs-blue);
+      transition: transform .2s;
+    }
+    .faq-item[open] summary::after { content: "\2013"; }
+    .faq-item .answer {
+      padding: 0 22px 20px; color: var(--bs-text); font-size: 15px;
+    }
+
+    /* Final CTA */
+    .final-cta {
+      background: linear-gradient(135deg, var(--bs-blue) 0%, var(--bs-blue-dark) 100%);
+      color: #fff;
+      text-align: center;
+      padding: 64px 24px;
+      border-radius: var(--bs-radius);
+      margin: 0 24px;
+    }
+    .final-cta h2 { color: #fff; font-size: 32px; margin: 0 0 10px; }
+    .final-cta p { color: rgba(255,255,255,.85); font-size: 16px; margin: 0 0 24px; }
+    .final-cta .btn-primary { background: #fff; color: var(--bs-blue); }
+    .final-cta .btn-primary:hover { background: #FFD54F; color: var(--bs-navy); }
+    .final-cta .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.4); }
+    .final-cta .btn-secondary:hover { background: rgba(255,255,255,.1); }
+
+    /* Footer */
+    footer.site {
+      background: var(--bs-navy); color: #B0BEC5;
+      padding: 48px 0 24px; margin-top: 64px;
+      font-size: 14px;
+    }
+    footer.site .grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 32px;
+      padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+    footer.site h4 { color: #fff; font-size: 14px; margin: 0 0 14px; }
+    footer.site ul { list-style: none; padding: 0; margin: 0; }
+    footer.site ul li { margin-bottom: 8px; }
+    footer.site ul a { color: #B0BEC5; text-decoration: none; }
+    footer.site ul a:hover { color: #fff; }
+    footer.site .legal {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 24px; flex-wrap: wrap; gap: 12px;
+    }
+    footer.site .compliance {
+      display: flex; gap: 14px; flex-wrap: wrap;
+    }
+    footer.site .compliance span {
+      background: rgba(255,255,255,.08); padding: 4px 10px;
+      border-radius: 4px; font-size: 12px; color: #fff;
+    }
+
+    /* Responsive */
+    @media (max-width: 880px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 32px; }
+      .nav ul { display: none; }
+      footer.site .grid { grid-template-columns: 1fr 1fr; }
+      .final-cta h2 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================ -->
+  <!-- NOTICE BAR                    -->
+  <!-- ============================ -->
+  <div class="notice-bar">
+    Cut your contract turnaround time with Power Automate and BoldSign &nbsp; | &nbsp;
+    <a href="#">Register ❯</a>
+  </div>
+
+  <!-- ============================ -->
+  <!-- HEADER                        -->
+  <!-- ============================ -->
+  <header class="site">
+    <div class="container nav">
+      <a href="#" class="logo">Bold<span>Sign</span></a>
+      <ul>
+        <li><a href="#">Features</a></li>
+        <li><a href="#">Solutions</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Enterprise</a></li>
+        <li><a href="#">API</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#" class="btn btn-secondary">Login</a>
+        <a href="#" class="btn btn-primary">Start free trial</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================ -->
+  <!-- HERO                          -->
+  <!-- ============================ -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1>AI-Powered Form Field Detection for eSignatures</h1>
+
+        <!-- ⭐ ANSWER-FIRST BLOCK ⭐ -->
+        <p class="answer-first"><strong>
+          AI form field detection automatically scans your uploaded document and places signature, initial, date, and text fields in the correct positions — eliminating manual drag-and-drop so contracts and templates are ready to send in seconds.
+        </strong></p>
+
+        <p class="subhead">
+          Speed up template creation and simplify your switch from DocuSign, Adobe Acrobat Sign, or PandaDoc — no manual field setup needed.
+        </p>
+
+        <div class="cta-row">
+          <a href="#" class="btn btn-primary">Start free trial</a>
+          <a href="#" class="btn btn-secondary">Request demo</a>
+          <span class="trust-line">30-day free trial · No credit card required</span>
+        </div>
+      </div>
+
+      <figure class="hero-figure">
+        <div class="placeholder">
+          <span class="badge">DEMO</span>
+          <div class="icon">📄✨</div>
+          <strong style="font-size:17px;color:var(--bs-navy);">AI placing signature, date &amp; text fields</strong>
+          <p style="margin:8px 0 0;font-size:13px;color:var(--bs-muted);">
+            Replace with the actual product GIF or 60-90s demo video.
+          </p>
+        </div>
+        <figcaption>BoldSign AI placing fields automatically on a sample contract.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- LOGO STRIP                    -->
+  <!-- ============================ -->
+  <div class="logo-strip">
+    <div class="container">
+      <p>Trusted by 50,000+ businesses worldwide</p>
+      <div class="logos">
+        <span>SONY</span><span>SAMSONITE</span><span>RYANAIR</span>
+        <span>HYATT</span><span>CRUMBL</span><span>PAYROC</span><span>COST PLUS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ -->
+  <!-- KEY TAKEAWAYS                 -->
+  <!-- ============================ -->
+  <section class="block takeaways">
+    <div class="container">
+      <h2>Key takeaways</h2>
+      <ul>
+        <li>Detects signature, initial, date, text, checkbox, dropdown, and attachment fields automatically</li>
+        <li>Works on PDF and Microsoft Word documents</li>
+        <li>Build sendable templates up to 80% faster than manual placement</li>
+        <li>Available on every BoldSign plan, including the 30-day free trial</li>
+        <li>Built-in audit trail; SOC 2, HIPAA, GDPR, eIDAS, and ESIGN Act compliant</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- HOW IT WORKS                  -->
+  <!-- ============================ -->
+  <section class="block alt how-it-works">
+    <div class="container">
+      <h2>How BoldSign's AI form field detection works</h2>
+      <p class="lede">From upload to "ready to send" in four steps.</p>
+      <ol>
+        <li>
+          <strong>Upload</strong>
+          <p>Drop in a PDF or Word document.</p>
+        </li>
+        <li>
+          <strong>Scan</strong>
+          <p>BoldSign's AI reads the document layout, locating signature lines, date placeholders, and form labels.</p>
+        </li>
+        <li>
+          <strong>Auto-place</strong>
+          <p>Signature, initial, date, text, checkbox, and dropdown fields are positioned automatically and assigned to signers.</p>
+        </li>
+        <li>
+          <strong>Review &amp; send</strong>
+          <p>Adjust any field if needed, then send for signature in one click.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- FIELD TYPES                   -->
+  <!-- ============================ -->
+  <section class="block">
+    <div class="container">
+      <h2>Field types BoldSign's AI detects</h2>
+      <p class="lede">Every field type your contracts and forms typically need — recognized automatically.</p>
+      <div class="grid-3">
+        <div class="feature-card">
+          <span class="ico">✍</span>
+          <h3>Signature</h3>
+          <p>Detects "Signature," "Sign here," and "X__" patterns.</p>
+        </div>
+        <div class="feature-card">
+          <span class="ico">Aa</span>
+          <h3>Initial</h3>
+          <p>Recognizes "Initial," "Init," and short signature blocks.</p>
+        </div>
+        <div class="feature-card">
+          <span class="ico">📅</span>
+          <h3>Date</h3>
+          <p>Auto-locates "Date," "Effective Date," and signing-date prompts.</p>
+        </div>
+        <div class="feature-card">
+          <span class="ico">📝</span>
+          <h3>Text</h3>
+          <p>Maps "Name," "Address," "Email," and other open text labels.</p>
+        </div>
+        <div class="feature-card">
+          <span class="ico">☑</span>
+          <h3>Checkbox</h3>
+          <p>Identifies tick-box patterns for consent and disclosure.</p>
+        </div>
+        <div class="feature-card">
+          <span class="ico">▼</span>
+          <h3>Dropdown</h3>
+          <p>Detects multi-option fields where structured input is required.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- ACCURACY                      -->
+  <!-- ============================ -->
+  <section class="block alt accuracy">
+    <div class="container">
+      <h2>How accurate is BoldSign's AI?</h2>
+      <p>
+        BoldSign's AI correctly identifies and places signature, date, and text fields on standard business contracts in most cases. You always get a review screen before sending, so any field can be moved, resized, or reassigned in one click.
+      </p>
+      <div class="stat-row">
+        <div><span class="stat">12+</span><span>Field types detected</span></div>
+        <div><span class="stat">~80%</span><span>Faster template setup vs manual</span></div>
+        <div><span class="stat">PDF + Word</span><span>Document formats supported</span></div>
+      </div>
+      <p class="placeholder-note">⚠️ Replace numbers with product-team-validated figures before publishing.</p>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- USE CASES                     -->
+  <!-- ============================ -->
+  <section class="block">
+    <div class="container">
+      <h2>Who uses AI form field detection?</h2>
+      <p class="lede">U.S. teams that send the same documents repeatedly get the most value, fastest.</p>
+      <div class="grid-3">
+        <div class="feature-card">
+          <h3>HR &amp; onboarding</h3>
+          <p>Send offer letters, NDAs, and I-9s with fields detected automatically — no template rebuild for every new hire.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Real estate</h3>
+          <p>Listing agreements, disclosures, and purchase contracts: upload the form, the AI places initial and signature fields where buyers and sellers need them.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Sales contracts</h3>
+          <p>Order forms and MSAs: pull a CRM-generated PDF, send for signature in seconds.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Healthcare consent</h3>
+          <p>HIPAA-compliant patient consent forms with checkbox and signature detection — no manual setup per intake form.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- COMPARISON                    -->
+  <!-- ============================ -->
+  <section class="block alt">
+    <div class="container">
+      <h2>BoldSign vs DocuSign vs Adobe Sign vs PandaDoc</h2>
+      <p class="lede">A side-by-side look at AI form field detection in the major U.S. eSignature platforms.</p>
+      <div class="comparison-wrap">
+        <table class="comparison">
+          <thead>
+            <tr>
+              <th>Feature</th>
+              <th>BoldSign</th>
+              <th>DocuSign</th>
+              <th>Adobe Acrobat Sign</th>
+              <th>PandaDoc</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>AI form field detection</td>
+              <td><span class="yes">✓</span> All plans</td>
+              <td><span class="yes">✓</span> Higher tiers</td>
+              <td><span class="yes">✓</span> Higher tiers</td>
+              <td><span class="partial">Partial</span></td>
+            </tr>
+            <tr>
+              <td>PDF + Word support</td>
+              <td><span class="yes">✓</span></td>
+              <td><span class="yes">✓</span></td>
+              <td><span class="yes">✓</span></td>
+              <td><span class="yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>Free trial length</td>
+              <td>30 days</td>
+              <td>30 days</td>
+              <td>14 days</td>
+              <td>14 days</td>
+            </tr>
+            <tr>
+              <td>Per-user pricing (no per-envelope fees)</td>
+              <td><span class="yes">✓</span></td>
+              <td><span class="no">✗</span></td>
+              <td><span class="no">✗</span></td>
+              <td><span class="yes">✓</span></td>
+            </tr>
+            <tr>
+              <td>REST API on all paid plans</td>
+              <td><span class="yes">✓</span></td>
+              <td>Higher tiers</td>
+              <td>Higher tiers</td>
+              <td>Higher tiers</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:20px;"><a href="#" style="color:var(--bs-blue);font-weight:600;text-decoration:none;">See full BoldSign vs DocuSign comparison →</a></p>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- MIGRATION                     -->
+  <!-- ============================ -->
+  <section class="block migration">
+    <div class="container">
+      <h2>Switching from DocuSign or Adobe Sign?</h2>
+      <p class="lede">
+        AI form field detection is the fastest path off DocuSign. Upload the same PDFs and Word templates you use today, and BoldSign rebuilds the field layout for you — usually in under a minute per template.
+      </p>
+      <ul>
+        <li>Bulk-upload existing templates</li>
+        <li>AI re-creates field placement automatically</li>
+        <li>Reassign signer roles in one click</li>
+        <li>Send your first signature on day one</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- PROOF                         -->
+  <!-- ============================ -->
+  <section class="block alt">
+    <div class="container">
+      <blockquote class="proof">
+        We migrated 47 DocuSign templates to BoldSign in an afternoon — the AI placed nearly every field correctly the first time, and our HR team was sending offer letters the same day.
+        <cite>— Jane Doe, Operations Lead, [Customer Name placeholder]</cite>
+      </blockquote>
+      <p class="placeholder-note">⚠️ Replace with a real, attributed BoldSign customer quote.</p>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- FAQ                           -->
+  <!-- ============================ -->
+  <section class="block">
+    <div class="container">
+      <h2>Frequently asked questions</h2>
+      <p class="lede">Everything teams ask before turning on AI field detection.</p>
+
+      <details class="faq-item" open>
+        <summary>How accurate is BoldSign's AI form field detection?</summary>
+        <div class="answer">BoldSign's AI correctly identifies and places signature, date, and text fields on standard contracts in most cases. You can review and adjust any field before sending.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Which document types are supported?</summary>
+        <div class="answer">BoldSign supports PDF and Microsoft Word documents for AI field detection.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Which field types can the AI detect?</summary>
+        <div class="answer">Signature, initial, date, text, checkbox, dropdown, and attachment fields.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I edit AI-placed fields before sending?</summary>
+        <div class="answer">Yes — every detected field can be moved, resized, reassigned to a different signer, or deleted before the document is sent.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is AI form field detection included in all plans?</summary>
+        <div class="answer">Yes, AI form field detection is available on all BoldSign plans, including the 30-day free trial.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How does it differ from DocuSign smart fields?</summary>
+        <div class="answer">BoldSign's AI field detection is included on every paid plan, supports both PDF and Word, and pairs with reusable templates so migrating from DocuSign takes minutes, not weeks.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is signer data secure during AI processing?</summary>
+        <div class="answer">Yes. Documents are processed inside BoldSign's SOC 2-, HIPAA-, GDPR-, and eIDAS-compliant infrastructure, with end-to-end encryption and a tamper-proof audit trail.</div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- FINAL CTA                     -->
+  <!-- ============================ -->
+  <section class="block">
+    <div class="container">
+      <div class="final-cta">
+        <h2>Try AI form field detection free for 30 days</h2>
+        <p>No credit card required. Cancel anytime.</p>
+        <div class="cta-row" style="justify-content:center;">
+          <a href="#" class="btn btn-primary">Start free trial</a>
+          <a href="#" class="btn btn-secondary">Request demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ -->
+  <!-- FOOTER                        -->
+  <!-- ============================ -->
+  <footer class="site">
+    <div class="container">
+      <div class="grid">
+        <div>
+          <a href="#" class="logo" style="color:#fff;">Bold<span>Sign</span></a>
+          <p style="margin-top:12px;color:#B0BEC5;">
+            BoldSign is an eSignature software by Syncfusion, trusted by 50,000+ businesses across 120+ countries.
+          </p>
+        </div>
+        <div>
+          <h4>Product</h4>
+          <ul>
+            <li><a href="#">eSignature API</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">AI Field Detection</a></li>
+            <li><a href="#">Integrations</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Compare</h4>
+          <ul>
+            <li><a href="#">vs DocuSign</a></li>
+            <li><a href="#">vs Adobe Sign</a></li>
+            <li><a href="#">vs PandaDoc</a></li>
+            <li><a href="#">vs HelloSign</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4>Resources</h4>
+          <ul>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Developer Docs</a></li>
+            <li><a href="#">Customer Stories</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="legal">
+        <span>© 2026 BoldSign by Syncfusion · Sample SEO-optimized page draft</span>
+        <div class="compliance">
+          <span>SOC 2</span><span>HIPAA</span><span>GDPR</span>
+          <span>eIDAS</span><span>ESIGN Act</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
